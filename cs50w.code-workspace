@@ -4,5 +4,15 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath":"/opt/homebrew/Caskroom/miniforge/base/envs/learn/bin/python" ,
+		"python.condaPath": "/opt/homebrew/Caskroom/miniforge/base/envs/learn",
+		"python.terminal.activateEnvInCurrentTerminal": true	,
+		"python.terminal.activateEnvironment": true,
+		"terminal.integrated.profiles.linux": {
+			"zsh (login)": {
+			  "path": "/opt/homebrew/bin/zsh"
+			}
+		  }
+	}
 }
