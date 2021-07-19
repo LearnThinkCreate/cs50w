@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <title>Task</title>
-    </head>
-    <body>
-        <ol>
-            {% for task in tasks %}
-                <li>{{ task }}</li>
-            {% endfor %}
-        </ol>
-    </body>
-</html>
+{% extends tasks/layout.html}
+
+{% block body %}
+    <ol>
+        {% for task in tasks %}
+            <li>{{ task }}</li>
+        {% endfor %}
+    </ol>
+ {% endblock %}
