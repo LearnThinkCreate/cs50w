@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Hello!</title>
+        <title>Is it New Year's</title>
     </head>
     <main>
         <body>
-            <h1>Hello World</h1>
+            {% if newyear %}                
+                <h1>YES</h1>
+            {% else %}
+                <h1>NO</h1>
+            {% endif %}
         </body>
     </main>
 </html>
