@@ -6,11 +6,13 @@ from django.urls import reverse
 class NewTaskForm(forms.Form):
     task = forms.CharField(label="New Task")
 
-tasks = ['foo', 'bar', 'baz']
 # Create your views here.
 def index(request):
+    # Creating tasks variable inside the session
+    if "tasks" not in request.session:
+        request.session['tasks'] = []
     return render(request, "tasks/index.html", {
-        "tasks":tasks
+        "tasks":request.session["task"]
     })
 
 def add(request):
