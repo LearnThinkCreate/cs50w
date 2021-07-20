@@ -12,7 +12,7 @@ def index(request):
     if "tasks" not in request.session:
         request.session['tasks'] = []
     return render(request, "tasks/index.html", {
-        "tasks":request.session["task"]
+        "tasks":request.session["tasks"]
     })
 
 def add(request):
@@ -22,13 +22,13 @@ def add(request):
             # getting the task variable from the cleaned form
             task = form.cleaned_data['task']
 
-            # Appening the task to the list of task
-            tasks.append(task)
-
+            # setting the value of the form to the session variable
+            request.session['tasks'] += [task]
+           
             # Redirect user to the list of task, uses name of page, not specific route
             # Reverse gets the name of a url, then returns the route 
             return HttpResponseRedirect(reverse("tasks:index"))
-
+            
         else:
             # If the form is invalid, re-render the page with existing information.
             return render(request, "tasks/add.html", {
