@@ -1,0 +1,15 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    {{ TITLE }}
+{% endblock %}
+
+{% block body %}
+    <h1>All Pages</h1>
+
+    {% if content %}
+        <h1>YES</h1>
+    {% else %}
+        <h1>NO</h1>
+    {% endif %}
+{% endblock %}
