@@ -2,6 +2,8 @@ from django import forms
 from django.http import HttpResponseRedirect
 from . import util
 from django.shortcuts import render
+from django.template.defaultfilters import stringfilter
+from markdown2 import Markdown
 
 class search(forms.Form):
     q = forms.CharField(max_length=100,
@@ -45,11 +47,14 @@ class editPage(forms.Form):
 
 def get_page(request, TITLE):
     # If page found returning page
+    markdowner = Markdown()
+
+    html_wiki_page = markdowner.convert(util.get_entry(TITLE.lower()))
     if  util.get_entry(TITLE.lower()):
         return render(request, "encyclopedia/wiki.html",{
         "TITLE":TITLE.capitalize(),
         "form":search(),
-        "content":util.get_entry(TITLE.lower())
+        "content":html_wiki_page
     })
     # Else returning error
     return render(request, "encyclopedia/error.html", {

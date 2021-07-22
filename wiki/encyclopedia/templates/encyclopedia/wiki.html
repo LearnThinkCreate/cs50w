@@ -7,7 +7,7 @@
 {% block body %}
     <h1>{{ TITLE }}</h1>
 
-    {{ content }}
+    {{ content|safe }}
     <form action="{% url 'encyclopedia:editPage' %}" method="post">
         {% csrf_token %}
         <div class="form-group">

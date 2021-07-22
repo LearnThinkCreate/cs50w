@@ -2,7 +2,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from . import util
 from .helpers import *
-import random
+from random import choice
+from markdown2 import Markdown
 
 def index(request):
     if request.method == "POST":
@@ -44,8 +45,6 @@ def index(request):
     })
 
 def wiki(request, TITLE):
-    if request.POST.get("edit"):
-        pass
     return get_page(request, TITLE)
     
 
@@ -102,6 +101,6 @@ def save(request):
         "editForm":form
     })
 
-def random(request):
-    return get_page(util.list_entries[random.randrange(len(util.list_entries))])
+def randomPage(request):
+    return get_page(request, choice(util.list_entries()) )
 
