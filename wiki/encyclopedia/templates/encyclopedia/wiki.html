@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1>All Pages</h1>
+    <h1>{{ TITLE }}</h1>
 
     {% if content %}
-        <h1>YES</h1>
+        {{ content }}
     {% else %}
-        <h1>NO</h1>
+        <h1>Page not found</h1>
     {% endif %}
 {% endblock %}
