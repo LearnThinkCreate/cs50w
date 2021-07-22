@@ -1,30 +1,8 @@
 from django.shortcuts import render
 from django.urls import reverse
-from django import forms
-from django.http import HttpResponseRedirect
 from . import util
-
-class search(forms.Form):
-    q = forms.CharField(max_length=100,
-    widget=forms.TextInput(attrs={
-        'class':'search', 
-        "placeholder":"Search Encyclopedia"
-    }), label="")
-
-class createPage(forms.Form):
-    title = forms.CharField(label="",
-    required=True,    
-    widget=forms.TextInput(attrs={
-        "class":"form-control form-control-lg",
-        "placeholder":"Title"
-    }))
-
-    markdown = forms.CharField(label="",
-    required=True,
-    widget=forms.Textarea(attrs={
-        "class":"form-control form-control-lg",
-        "placeholder":"Enter your Markdown Content"
-    }))
+from .helpers import *
+import random
 
 def index(request):
     if request.method == "POST":
@@ -36,7 +14,7 @@ def index(request):
             q = form.cleaned_data['q'].lower()
 
             # if the entry is in our files, the display entry
-            if util.get_entry(q):
+            if util.get_entry(q.replace(" ", "_")):
                 return render(request, "encyclopedia/wiki.html",{
                     "TITLE":q,
                     "content":util.get_entry(q),
@@ -47,7 +25,7 @@ def index(request):
             results = []
             for entry in util.list_entries():
                 if q.lower() in entry.lower():
-                    results.append(entry)
+                    results.append(entry.replace("_", " "))
 
             return render(request, "encyclopedia/results.html",{
                 "results":results,
@@ -66,11 +44,10 @@ def index(request):
     })
 
 def wiki(request, TITLE):
-    return render(request, "encyclopedia/wiki.html", {
-        "TITLE":TITLE.capitalize(),
-        "content":util.get_entry(TITLE.lower()),
-        "form":search()
-    })
+    if request.POST.get("edit"):
+        pass
+    return get_page(request, TITLE)
+    
 
 def newPage(request):
     # Checking the request method
@@ -80,12 +57,8 @@ def newPage(request):
             title = form.cleaned_data["title"]
             content = form.cleaned_data["markdown"]
 
-            util.save_entry(title, content)
-            return render(request, "encyclopedia/wiki.html",{
-                    "TITLE":title,
-                    "content":content,
-                    "form":search()
-                })
+            util.save_entry(title.lower().replace(" ", "_"), content)
+            return get_page(title.lower())
         # There form was not valid
         return render(request, "encyclopedia/error.html")
     
@@ -94,4 +67,41 @@ def newPage(request):
         "form":search(),
         "newPage":createPage()
     })
+
+def edit(request):
+    # Getting the form by its id 
+    title = request.POST.get("edit")
+
+    content = util.get_entry(title.lower())
+    
+    # def fun():
+    #     return editPage(title, content)
+
+    # edit_form = forms.EditPageForm(initial={
+    #     'pagename': title, 
+    #     'body':content
+    #     })
+    return render(request, "encyclopedia/editPage.html", {
+        "TITLE":title.capitalize(),
+        "form":search(),
+        "editForm":editPage(initial={'title': title, 'content':content})
+    })
+
+def save(request):
+    form = editPage(request.POST)
+
+    if form.is_valid(): 
+        title = form.cleaned_data["title"]
+        content = form.cleaned_data["content"]
+
+        util.save_entry(title, content)
+
+        return get_page(request, title)
+    return(request, "encyclopedia/editPage.html", {
+        "form":search(),
+        "editForm":form
+    })
+
+def random(request):
+    return get_page(util.list_entries[random.randrange(len(util.list_entries))])
 

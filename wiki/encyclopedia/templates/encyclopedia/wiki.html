@@ -7,9 +7,12 @@
 {% block body %}
     <h1>{{ TITLE }}</h1>
 
-    {% if content %}
-        {{ content }}
-    {% else %}
-        <h1>Page not found</h1>
-    {% endif %}
+    {{ content }}
+    <form action="{% url 'encyclopedia:editPage' %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+        <button type="submit"  name = "edit" value="{{ TITLE }}" id ="edit" class="btn btn-light">edit</button>
+        </div>
+        {{ editForm}}
+    </form>
 {% endblock %}

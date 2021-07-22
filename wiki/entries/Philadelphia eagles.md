@@ -1,1 +1,0 @@
-The best football team in the history of the universe!
