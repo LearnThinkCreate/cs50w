@@ -6,6 +6,8 @@
 
 {% block body %}
     <h1>Serach Error</h1>
-    <p>No pages found</p>
-
-{% endblock %}
+    {% if results %}
+        <p>No pages found</p>
+    {% else %}
+        <p>No pages fount</p>
+        {% endblock %}

@@ -6,11 +6,14 @@
 
 {% block body %}
     <h1>Search Results</h1>
-
-    <ul>
+    {% if results %}
+        <ul>
         {% for result in results %}
             <li><a href=/wiki/{{result}}>{{ results }}</a></li>
         {% endfor %}
-    </ul>
+        </ul>
+    {% else %}
+        <p>No pages fount</p>
+    {% endif %}
 
 {% endblock %}

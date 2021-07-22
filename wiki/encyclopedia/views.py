@@ -13,25 +13,32 @@ def index(request):
     if request.method == "POST":
         # Getting the data from the form
         form = search(request.POST)
+
         if form.is_valid():
             # Getting the query from the user
-            q = form.cleaned_data['q']
+            q = form.cleaned_data['q'].lower()
 
-            # Appending any entry that matches the query to a list
+            # if the entry is in our files, the display entry
+            if util.get_entry(q):
+                return render(request, "encyclopedia/wiki.html",{
+                    "TITLE":q,
+                    "content":util.get_entry(q),
+                    "form":search()
+                })
+
+            # Else searching if q is substring of entry
             results = []
             for entry in util.list_entries():
-                if q in entry:
+                if q.lower() in entry.lower():
                     results.append(entry)
 
-            # Returning that list to the user
             return render(request, "encyclopedia/results.html",{
-                "results":results
+                "results":results,
+                "form":search()
             })
-            pass
+            # Form is not valid
         else:
-            return render(request, "encyclopedia/error.html",{
-                pass
-            })
+            return render(request, "encyclopedia/error.html")
     return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries(),
         "form":search()
@@ -39,7 +46,8 @@ def index(request):
 
 def wiki(request, TITLE):
     return render(request, "encyclopedia/wiki.html", {
-        "TITLE":TITLE,
-        "content":util.get_entry(TITLE)
+        "TITLE":TITLE.capitalize(),
+        "content":util.get_entry(TITLE.lower()),
+        "form":search()
     })
 
