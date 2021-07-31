@@ -4,9 +4,11 @@ from django.db import models
 # Each object is a table that django will create for us 
 
 class Airport(models.Model):
+    # variables are columns
     code = models.CharField(max_length=3)
     city = models.CharField(max_length=64)
 
+    # Magic Method for printing 
     def __str__(self):
         return f"{self.city} ({self.code})"
 

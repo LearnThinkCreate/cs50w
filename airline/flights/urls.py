@@ -8,5 +8,5 @@ urlpatterns = [
     # Models
 
     # Views
-    #path("", views.index, name = "")
+    path("", views.index, name = "index")
 ]
