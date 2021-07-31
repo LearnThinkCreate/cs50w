@@ -30,3 +30,18 @@ class Flights(models.Model):
 
     def __str__(self):
         return f"{self.id}: {self.origin} to {self.destination}"
+
+class Passengers(models.Model):
+    first = models.CharField(max_length=64)
+    last = models.CharField(max_length=64)
+    flights = models.ManyToManyField(
+        # Name of the object it's related to
+        Flights,
+        # Allows a passenger to have 0 flights
+        blank=True,
+        # Name that can be looked up by the Flights object
+        related_name="passengers"
+        )
+
+    def __str__(self):
+        return f"{self.first} {self.last}"

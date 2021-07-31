@@ -8,5 +8,6 @@ urlpatterns = [
     # Models
 
     # Views
-    path("", views.index, name = "index")
+    path("", views.index, name = "index"),
+    path('<int:flight_id>', views.flight, name="flight")
 ]
