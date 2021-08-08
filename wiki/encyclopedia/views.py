@@ -47,7 +47,6 @@ def index(request):
 def wiki(request, TITLE):
     return get_page(request, TITLE)
     
-
 def newPage(request):
     # Checking the request method
     if request.method == "POST":

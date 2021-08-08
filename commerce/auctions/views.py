@@ -3,8 +3,10 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
-from .models import User
+from .models import User, Listing
+from .helpers import ListingForm
 
 
 def index(request):
@@ -61,3 +63,34 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+@login_required
+def createListing(request):
+    if request.method == "POST":
+        form = ListingForm(request.POST)
+
+        if form.is_valid():
+            # Creating a new listing model object if the form is valid
+            newListing = Listing(
+                owner = request.user,
+                title = form.cleaned_data['title'],
+                description = form.cleaned_data['description'],
+                starting_bid = form.cleaned_data['startingbid'],
+                image = form.cleaned_data['image'],
+                category = form.cleaned_data['category'],
+            )
+
+            # Saving the new listing to the database
+            newListing.save()
+
+            # Returning the user to active listings 
+            return HttpResponseRedirect(reverse("index"))
+            
+
+        # Form is not valid
+        return render(request, "auctions/createListing.html", {
+            "form":form
+        })
+    return render(request, "auctions/createListing.html", {
+        "form":ListingForm()
+    })

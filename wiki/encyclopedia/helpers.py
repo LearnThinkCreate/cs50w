@@ -6,28 +6,29 @@ from django.template.defaultfilters import stringfilter
 from markdown2 import Markdown
 
 class search(forms.Form):
-    q = forms.CharField(max_length=100,
-    widget=forms.TextInput(attrs={
-        'class':'search', 
-        "placeholder":"Search Encyclopedia"
-    }), label="")
+    q = forms.CharField(
+        max_length=100,
+        widget=forms.TextInput(attrs={
+            'class':'search', 
+            "placeholder":"Search Encyclopedia"
+        }), label="")
 
 class createPage(forms.Form):
     title = forms.CharField(label="",
-    required=True,    
-    widget=forms.TextInput(attrs={
-        "class":"form-control form-control-lg",
-        "placeholder":"Title",
-    }))
+        required=True,    
+        widget=forms.TextInput(attrs={
+            "class":"form-control form-control-lg",
+            "placeholder":"Title",
+        }))
 
     content = forms.CharField(label="",
-    required=True,    
-    widget=forms.Textarea(attrs={
-         "rows":"10", 
-        "cols":"10",
-        "class":"form-control form-control-lg",
-        "placeholder":"Markdown Content"
-    }))
+        required=True,    
+        widget=forms.Textarea(attrs={
+            "rows":"10", 
+            "cols":"10",
+            "class":"form-control form-control-lg",
+            "placeholder":"Markdown Content"
+        }))
 
 class editPage(forms.Form):
     title = forms.CharField(label="Title",disabled = False,required = False,
@@ -52,10 +53,10 @@ def get_page(request, TITLE):
     html_wiki_page = markdowner.convert(util.get_entry(TITLE.lower()))
     if  util.get_entry(TITLE.lower()):
         return render(request, "encyclopedia/wiki.html",{
-        "TITLE":TITLE.capitalize(),
-        "form":search(),
-        "content":html_wiki_page
-    })
+            "TITLE":TITLE.capitalize(),
+            "form":search(),
+            "content":html_wiki_page
+        })
     # Else returning error
     return render(request, "encyclopedia/error.html", {
         "form":search
