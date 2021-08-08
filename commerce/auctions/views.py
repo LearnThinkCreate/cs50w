@@ -10,7 +10,10 @@ from .helpers import ListingForm
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Listing.objects.filter(active=True)
+    return render(request, "auctions/index.html", {
+        "listings":listings
+    })
 
 
 def login_view(request):
@@ -78,6 +81,7 @@ def createListing(request):
                 starting_bid = form.cleaned_data['startingbid'],
                 image = form.cleaned_data['image'],
                 category = form.cleaned_data['category'],
+                active = True
             )
 
             # Saving the new listing to the database

@@ -5,14 +5,6 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
-#from django.forms.fields import CharField
-#from django.forms.widgets import TextInput, Textarea
-
-# Formating
-def usd(value):
-    """Format value as USD."""
-    return f"${value:,.2f}"
-
 # Helper functions
 
 # Forms

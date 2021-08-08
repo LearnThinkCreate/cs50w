@@ -14,16 +14,21 @@ class Listing(models.Model):
         # Related Name
         related_name="user"
     )
-    # Mandatory 
+
+    # Metadata
+    active = models.BooleanField()
+
+    # Mandatory user input
     title = models.CharField(max_length=64, blank=False)
     description = models.TextField(blank=False)
     starting_bid = models.IntegerField(blank=False)
-    # Optional
+    # Optional user input
     image = models.URLField(blank=True)
     category = models.TextField(blank=True)
 
 
 class Bid(models.Model):
+    
     pass
 
 class Comment(models.Model):
