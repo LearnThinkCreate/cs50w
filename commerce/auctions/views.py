@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing
+from .models import User, Listing, Bid
 from .helpers import ListingForm
 
 
@@ -97,4 +97,16 @@ def createListing(request):
         })
     return render(request, "auctions/createListing.html", {
         "form":ListingForm()
+    })
+
+
+def viewListing(request, listing_id):
+    listing = Listing.objects.get(pk=listing_id)
+    if Bid.objects.filter(item_id = listing.id, max_bid = True):
+        bid = Bid.objects.filter(item_id = listing.id, max_bid = True)
+    else:
+        bid = None
+    return render(request, "auctions/viewListing.html", {
+        "listing":Listing.objects.get(pk=listing_id),
+        "bid":bid
     })
