@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% load usd %}
+
+{% block body %}
+
+    <div class="jumbotron">
+        <h1 class="display-4">{{ listing.title }}</h1>
+        <p class="lead">{{listing.description}}</p>
+        {% if listing.image %}
+            <img src="{{ listing.image }}" class="img-fluid" style="width:200px;height:200px;">
+        {% endif %}
+        <hr class="my-4">
+        <h3 class="display-6">Current Price:</h3>
+        {% if bid %}
+            <h3 class="display-6">{{ bid.price | usd}}</h3>
+        {% else %}
+            <h3 class="display-6">{{ listing.starting_bid | usd}}</h3>
+        {% endif %}
+      </div>
+{% endblock %}
