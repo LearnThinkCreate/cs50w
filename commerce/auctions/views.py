@@ -6,18 +6,7 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
 from .models import User, Listing, Bid, Wishlist, Comment
-from .helpers import ListingForm, BidForm
-
-def current_listing_price(listing):
-    try:
-        Bid.objects.get(item_id = listing.id, max_bid = True)
-        old_bid = Bid.objects.get(item_id = listing.id, max_bid = True)
-        old_bid.max_bid = False
-        currentPrice = old_bid.price
-    except:
-        currentPrice = listing.starting_bid
-
-    return currentPrice
+from .helpers import *
 
 def index(request):
     listings = Listing.objects.filter(active=True)
@@ -111,81 +100,84 @@ def createListing(request):
 
 
 def viewListing(request, listing_id):
-    listing = Listing.objects.get(pk=listing_id)
-    try:
-        request.user.wishlist.get(listing_id = listing_id)
-        wishlist = True
-    except:
-        wishlist = False
-    if Bid.objects.filter(item_id = listing.id, max_bid = True):
-        maxBid = Bid.objects.get(item_id = listing.id, max_bid = True)
-        currentPrice = maxBid.price
-    else:
-        currentPrice = listing.starting_bid
-    return render(request, "auctions/viewListing.html", {
-        "listing":Listing.objects.get(pk=listing_id),
-        "currentPrice":currentPrice,
-        "bidForm":BidForm(),
-        "wishlist":wishlist
-    })
+    page = ListingPage(request, listing_id)
+    return page.renderPage()
 
+@login_required
 def bid(request, listing_id):
-    if request.method == "POST": 
-        form = BidForm(request.POST)
+    page = ListingPage(request, listing_id)
+    if page.method == "POST": 
+        form = BidForm(page.request.POST)
         if form.is_valid():
-            buyer = request.user
-            # Getting the list item
-            listing = Listing.objects.get(pk=listing_id)
+            buyer = page.user
             # Getting the curent price of the Item
-            try:
-                Bid.objects.get(item_id = listing.id, max_bid = True)
-                old_bid = Bid.objects.get(item_id = listing.id, max_bid = True)
-                old_bid.max_bid = False
-                currentPrice = old_bid.price
-            except:
-                currentPrice = listing.starting_bid
+            old_bid = Bid.objects.get(item_id = page.listing_id, max_bid = True)
+            old_bid.max_bid = False
+            old_bid.save()
             
             bid_price = form.cleaned_data["bid"]
             
-            if bid_price <= currentPrice:
-                return render(request, "auctions/viewListing.html", {
-                    "listing":Listing.objects.get(pk=listing_id),
-                    "currentPrice":currentPrice,
-                    "bidForm":BidForm()
-                    })
+            if bid_price <= page.currentPrice():
+                return page.renderPage(request)
 
             # Adding a new bid 
-            new_bid = Bid(item=listing, price=bid_price, max_bid=True)
-            # Saving teh bid
+            new_bid = Bid(item=page.getListing(), price=bid_price, max_bid=True)
+            # Saving the bid
             new_bid.save()
             # Adding a buyer
             buyer.bids.add(new_bid)
-            # Saving the information about the old max 
-            old_bid.save()
-            
-            # REturning the user back to View the item
+    
+            # Returning the user back to View the item
             return HttpResponseRedirect(reverse('index'))
 
         # The form was not valid
-        return render(request, "auctions/viewListing.html", {
-                "listing":Listing.objects.get(pk=listing_id),
-                "currentPrice":10,
-                "bidForm":BidForm(),
-                "wishlist":Wishlist.objects.get(listing_id=listing_id, )
-                })
+        return page.renderPage()
 
+@login_required
+def comment(request, listing_id):
+    page = ListingPage(request, listing_id)
+    if page.method == "POST":
+        form=CommentForm(page.request.POST)
+        if form.is_valid():
+            newComment = Comment(
+                listing = page.getListing(),
+                comment = form.cleaned_data["comment"]
+            )
+
+            newComment.save()
+            newComment.user.add(page.user)
+            newComment.save()
+
+            return page.renderPage()
+
+        # Form is invalid
+        return page.renderPage()
+        
+@login_required
 def closeAuction(request, listing_id):
-        # Performign a SQL query to get the wishlist ID 
-    wishlist_id = Listing.objects.raw(f'Select distinct(id) from auctions_wishlist where listing_id = {listing_id}')[0].id
-    if request.method == "POST":
-        pass
+    page = ListingPage(request, listing_id)
+    if page.method== "POST":
+        listing = page.getListing()
+        listing.active = False
+        listing.save()
 
+        return HttpResponseRedirect(reverse('index'))
+
+
+@login_required
 def addWishlist(request, listing_id):
-    wishlist_id = Listing.objects.raw(f'Select distinct(id) from auctions_wishlist where listing_id = {listing_id}')[0].id
-    if request.method == "POST":
-        pass
+    page = ListingPage(request, listing_id)
+    if page.method == "POST":
+        wishlist = page.getWishlist()
+        wishlist.user.add(page.user)
+        wishlist.save()
+        return page.renderPage()
 
+@login_required
 def removeWishlist(request, listing_id):
-    wishlist_id = Listing.objects.raw(f'Select distinct(id) from auctions_wishlist where listing_id = {listing_id}')[0].id
-    if request.method == "POST":
-        pass
+    page = ListingPage(request, listing_id)
+    if page.method == "POST":
+        wishlist = page.getWishlist()
+        wishlist.delete(page.user)
+        wishlist.save
+        return page.renderPage()
