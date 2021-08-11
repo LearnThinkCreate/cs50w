@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Listing
+from .models import User, Listing, Bid
 
 # Admin display Classes
 class ListingAdmin(admin.ModelAdmin):
@@ -9,3 +9,4 @@ class ListingAdmin(admin.ModelAdmin):
 
 admin.site.register(User)
 admin.site.register(Listing, ListingAdmin)
+admin.site.register(Bid)

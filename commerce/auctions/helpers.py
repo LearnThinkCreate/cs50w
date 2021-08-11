@@ -3,9 +3,9 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Div, Submit, HTML, Button, Row, Field
 from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 from django.core.exceptions import ValidationError
+from django.forms.widgets import NumberInput
 from django.utils.translation import gettext_lazy as _
-
-# Helper functions
+from .models import Bid, Listing, User
 
 # Forms
 class ListingForm(forms.Form):
@@ -52,5 +52,14 @@ class ListingForm(forms.Form):
              "class":"form-control"
         }
         )
+    )
+
+class BidForm(forms.Form):
+    bid = forms.DecimalField(
+        max_digits=11,
+        decimal_places=2,
+        label="",
+        localize=True,
+        widget=forms.NumberInput(attrs={"placeholder":"Bid"})
     )
 

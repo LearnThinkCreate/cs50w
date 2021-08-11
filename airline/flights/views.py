@@ -15,7 +15,6 @@ def index(request):
 
 def flight(request, flight_id):
     flight = Flights.objects.get(id=flight_id)
-    if 
     return render(request, "flights/flight.html", {
         "flight": flight,
         "passengers":flight.passengers.all(),
