@@ -17,144 +17,165 @@
     <h3 class="display-6">{{ currentPrice | usd }}</h3>
 
 
-<!-- User widgets-->
-<div class="accordion " id="accordionExample">
-<!-- Giving users ability to bid on items -->
-{% if user != listing.owner %}
-  <div class="card">
-    <div class="card-header" id="headingOne">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-          Bid
-        </button>
-      </h2>
-    </div>
+    <!-- User widgets-->
+    <div class="accordion " id="accordionExample">
+        <!-- Giving users ability to bid on items -->
+        {% if user != listing.owner %}
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                        Bid
+                        </button>
+                    </h2>
+                </div>
 
-    <div id="collapseOne" class="collapse" data-parent="#accordionExample">
-        <div style="padding: 10px;">
-            <form action="{% url 'bid' listing.id %}" class="form-control" method="post">
-                {% csrf_token %}
-                {{ bidForm }}
-                <input type="submit" value="Bid">
-            </form>
-        </div>
-    </div>
-  </div>
-{% endif %}
-{% if user == listing.owner and listing.active %}
-<!-- Giving owner ability to close auction -->
-  <div class="card">
-    <div class="card-header" id="headingTwo">
-        <h2 class="mb-0">
-        <!-- Button trigger modal -->
-        <button type="button" class="btn btn-link btn-block text-left" data-toggle="modal" data-target="#exampleModal">
-            Close Auction
-        </button>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to close the auction?</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <form action="{% url 'closeAuction' listing.id %}" class="form-control" method="POST">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-primary">Close Auction</button>
-                    <input type="hidden" label="user_id" value="{{ user.id }}">
-                    <input type="submit" value="Close">
-                </form>
+                <div id="collapseOne" class="collapse" data-parent="#accordionExample">
+                    <div style="padding: 10px;">
+                        <form action="{% url 'bid' listing.id %}" class="card-text" method="post">
+                            {% csrf_token %}
+                            {{ bidForm }}
+                            <input type="submit" value="Bid" class="btn btn-primary">
+                        </form>
+                    </div>
                 </div>
             </div>
+        {% endif %}
+        {% if user == listing.owner and listing.active %}
+        <!-- Giving owner ability to close auction -->
+        <div class="card">
+            <div class="card-header" id="headingTwo">
+                <h2 class="mb-0">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-link btn-block text-left" data-toggle="modal" data-target="#exampleModal">
+                    Close Auction
+                    </button>
+                </h2>
             </div>
-        </div>
-        </h2>
-    </div>
-  {% endif %}
-  <!-- Giving user ability to add or remove item from wishlist -->
-  <div class="card">
-    <div class="card-header" id="headingThree">
-        <h2 class="mb-0">
-        <!-- Button trigger modal for both scenerios-->
-        <button type="button" class="btn btn-link btn-block text-left" data-toggle="modal" data-target="#exampleModal">
-            {% if not wishlist %}
-            Add to wishlist
-            {% else %}
-            Remove from wishlist
-            {% endif %}
-        </button>
-        
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <!-- form for adding wishlist -->
-                {% if not wishlist %}
-                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to add this to your wishlist</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to close the auction?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <form action="{% url 'closeAuction' listing.id %}" method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" label="user_id" value="{{ user.id }}">
+                                <button type="submit" class="btn btn-primary">Close Auction</button>
+                            </form>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <!-- Form for adding to wishlist-->
-                <form action="{% url 'addWishlist' listing.id %}">
-                    {% csrf_token %}
-                    <input type="hidden" label="user_id" value="{{ user.id }}">
-                    <button type="submit" class="btn btn-primary">Remove</button>
-                </form>
-                </div>
-                <!-- Form for removing from wishlist-->
-                {% else %}
-                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to remove this from your wishlist</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-                </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <!-- Form for adding to wishlist-->
-                <form action="{% url 'removeWishlist' listing.id %}">
-                    {% csrf_token %}
-                    <input type="hidden" label="user_id" value="{{ user.id }}">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </form>
-                </div>
-                {% endif %}
-            </div>
             </div>
         </div>
-        </h2>
-    </div>
-<!-- Giving users ability to comment on items-->
-{% if user != listing.owner %}
-  <div class="card">
-    <div class="card-header" id="headingFour">
-      <h2 class="mb-0">
-        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
-          Comment
-        </button>
-      </h2>
-    </div>
+        {% endif %}
+        <!-- Giving user ability to add or remove item from wishlist -->
+        <div class="card">
+            <div class="card-header" id="headingThree">
+                <h2 class="mb-0"></h2>
+                    <!-- Button trigger modal for both scenerios-->
+                    <button type="button" class="btn btn-link btn-block text-left" data-toggle="modal" data-target="#exampleModal">
+                        {% if not wishlist %}
+                            Add to wishlist
+                        {% else %}
+                            Remove from wishlist
+                        {% endif %}
+                    </button>
+                </h2>
+            </div>
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <!-- form for adding wishlist -->
+                            {% if not wishlist %}
+                                <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to add this to your wishlist</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                    <!-- Form for adding to wishlist-->
+                                    <form action="{% url 'addWishlist' listing.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" label="user_id" value="{{ user.id }}">
+                                        <button type="submit" class="btn btn-primary">Add</button>
+                                    </form>
+                                </div>
+                                <!-- Form for removing from wishlist-->
+                            {% else %}
+                                    <h5 class="modal-title" id="exampleModalLabel">Are you sure you want to remove this from your wishlist</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <!-- Form for removing to wishlist-->
+                                        <form action="{% url 'removeWishlist' listing.id %}" method="POST">
+                                        {% csrf_token %}
+                                        <input type="hidden" label="user_id" value="{{ user.id }}">
+                                        <button type="submit" class="btn btn-primary">Remove</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                    </div>
+            </div>
+        </div>
+        <!-- Giving users ability to comment on items-->
+        {% if user != listing.owner %}
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#collapseFour" aria-expanded="true" aria-controls="collapseFour">
+                        Comment
+                        </button>
+                    </h2>
+                </div>
 
-    <!-- Change to be a comment adding form-->
-    <div id="collapseFour" class="collapse" data-parent="#accordionExample">
-        <div style="padding: 10px;">
-            <form action="{% url 'bid' listing.id %}" class="form-control" method="post">
-                {% csrf_token %}
-                {{ bidForm }}
-                <input type="submit" value="Bid">
-            </form>
-        </div>
-    </div>
-  </div>
-{% endif %}
-<!-- Add for loops for going over comments-->
+                <!-- Change to be a comment adding form-->
+                
 
-{% endblock %}
+                <div id="collapseFour" class="collapse" data-parent="#accordionExample" aria-labelledby="headingFour">
+                    <div class="card-body">
+                        <h5 class="card-title">Add a comment</h5>
+                        <form action="{% url 'comment' listing.id %}"  method="POST">
+                            {% csrf_token %}
+                            {{ commentForm|crispy}}
+                            <input type="submit" value="comment" class="btn btn-primary">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<hr class="my-4">
+<div class="section">
+    <h3 class="display-6">Comments:</h3>
+    <!-- Add for loops for going over comments-->
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col" colspan="6">Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comment in comments %}
+            <td>{{user.username}}</td>
+            <td colspan="6">{{comment.comment}}</td>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</div>
+    {% endblock %}

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 
-from .models import User, Listing, Bid, Wishlist, Comment
+from .models import *
 from .helpers import *
 
 def index(request):
@@ -152,7 +152,7 @@ def comment(request, listing_id):
 
         # Form is invalid
         return page.renderPage()
-        
+
 @login_required
 def closeAuction(request, listing_id):
     page = ListingPage(request, listing_id)
@@ -168,16 +168,27 @@ def closeAuction(request, listing_id):
 def addWishlist(request, listing_id):
     page = ListingPage(request, listing_id)
     if page.method == "POST":
-        wishlist = page.getWishlist()
-        wishlist.user.add(page.user)
+        try:
+            # Trying get the page if exist
+            wishlist = page.getWishlist()
+        except:
+            # Otherwise create a instance of a wishlist for this listing
+            wishlist = Wishlist(listing = page.getListing())
+            # Saving the wishlist 
+            wishlist.save()
+
+        # Adding the wishlist to the user
+        page.user.wishlist.add(wishlist)
+        # Saving hte wishlist
         wishlist.save()
+
         return page.renderPage()
 
 @login_required
 def removeWishlist(request, listing_id):
     page = ListingPage(request, listing_id)
     if page.method == "POST":
-        wishlist = page.getWishlist()
-        wishlist.delete(page.user)
-        wishlist.save
+        page.removeWishlist()
         return page.renderPage()
+
+    return HttpResponseRedirect(reverse('index'))

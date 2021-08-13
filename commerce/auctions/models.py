@@ -81,8 +81,7 @@ class Wishlist(models.Model):
     )
 
     # Magic Method for printing 
-    def __str__(self):
-        return f"{self.user} wants ({self.listing})"
+
 
 class Comment(models.Model):
     listing = models.ForeignKey(

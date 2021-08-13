@@ -6,7 +6,7 @@ from crispy_forms.bootstrap import AppendedText, PrependedText, FormActions
 from django.core.exceptions import ValidationError
 from django.forms.widgets import NumberInput
 from django.utils.translation import gettext_lazy as _
-from .models import Bid, Comment, Listing, User, Wishlist
+from .models import *
 from django.shortcuts import render
 
 # Forms
@@ -67,14 +67,12 @@ class BidForm(forms.Form):
 
 class CommentForm(forms.Form):
     comment = forms.CharField(
-        label="comment",
+        label="",
         disabled=False,
         required=True,
-        widget=forms.TextInput(attrs={
-                "rows":"10", 
-                "cols":"10",
-                'class':"form-control form-control-lg",
-                'style':"top:2rem; margin:5px"
+        widget=forms.Textarea(attrs={
+            "rows":5,
+            'class':"form-control form-control-lg"
         })
     )
 
@@ -87,8 +85,6 @@ class Page():
 
         def getUsername(self):
             return self.user.username
-
-
 
 class ListingPage(Page):
     def __init__(self, request, listing_id) -> None:
@@ -108,17 +104,30 @@ class ListingPage(Page):
     def currentPrice(self):
         if Bid.objects.filter(item_id = self.listing_id, max_bid = True):
             return Bid.objects.get(item_id = self.listing_id, max_bid = True).price
-        return self.getListing.starting_bid
+        return self.getListing().starting_bid
 
     def getWishlist(self):
-        return Wishlist.objects.filter(listing_id=self.listing_id)
+        return Wishlist.objects.get(listing_id=self.listing_id)
+
+    def removeWishlist(self):
+        # Getting the wishlist 
+        wishlist = Wishlist.objects.get(listing_id= self.listing_id)
+        # Removing the user from the wishlist
+        wishlist.user.remove(self.user)
+        # Saving the wishlist
+        wishlist.save()
+
+    def getComments(self):
+        return Comment.objects.filter(pk=self.listing_id)
 
     def getArgs(self):
         return   {
         "listing":self.getListing,
         "currentPrice": self.currentPrice(),
         "bidForm":BidForm(),
-        "wishlist":self.validWishlist()
+        "wishlist":self.validWishlist(),
+        "commentForm":CommentForm(),
+        "comments":self.getComments()
     }
     def renderPage(self):
         return render(self.request, "auctions/viewListing.html", self.getArgs())
