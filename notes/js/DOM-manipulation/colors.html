@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Colors</title>
+        <script>
+            // Loading all the content on the page
+            document.addEventListener('DOMContentLoaded', () => {
+                // Waiting for the value of the dropdown menu to change
+                document.querySelector('select').onchange = function() {
+                    // Changing the style of the header to the value of the select dropdown menu
+                    /* 
+                    In the context of an Event Handler "this" refers to the thing that recieved the event.
+                    The select option was the reciever in this case
+                    */
+                    document.querySelector('#hello').style.color = this.value;
+                }
+
+                /*
+                This was the original version of colors where buttons were used instead of a slect menut
+
+                // Running a function for each button element. The button is the input to the function
+                document.querySelectorAll('button').forEach(button => {
+                    // Function to run each time a button is clicked
+                    button.onclick = () => {
+                        // Changing the font color of the hello element to the color var stored in each button
+                        document.querySelector('#hello').style.color = button.dataset.color;
+                    }
+                })
+                */
+            });
+        </script>
+    </head>
+    <body>
+        <h1 id="hello">Hello!</h1>
+        <select>
+            <!-- The value is what we get in js, the innerHTML is what the user sees-->
+            <option value="black">Black</option>
+            <option value="red">Red</option>
+            <option value="blue">Blue</option>
+            <option value="green">Green</option>
+        </select>
+        <!--
+        Original version with buttons instead of the select menu
+        <button id="red">Red</button>
+        <button id="blue">Blue</button>
+        <button id="green">Green</button>
+    -->
+    </body>
+</html>

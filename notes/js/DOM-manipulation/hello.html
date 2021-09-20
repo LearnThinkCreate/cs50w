@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello World</title>
+        <script>
+            // Waiting for the html elements to load
+            document.addEventListener('DOMContentLoaded', () => {
+
+                // Listening for the form to be submited then running function
+                document.querySelector('form').onsubmit = () => {
+                    // Getting the name from the form and printing an alert
+                    const name = document.querySelector('#name').value;
+                    alert(`Hello, ${name}`)
+                }
+            })
+        </script>
+    </head>
+    <body>
+        <h1>Hello!</h1>
+        <form>
+            <input autofocus id="name" placeholder="Name" type="text">
+            <input type="submit">
+        </form>
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>My Webpage</title>
+        <style>
+            .post {
+                background-color: #77dd11;
+                padding: 20px;
+                margin: 10px;
+            }
+
+            body {
+                padding-bottom: 50px;
+            }
+        </style>
+        <script>
+
+            // Start with first post
+            let counter = 1;
+
+            // Load posts 20 at a time
+            const quantity = 20;
+
+            // When DOM loads, render the first 20 posts
+            document.addEventListener('DOMContentLoaded', load);
+
+            /* 
+            This function tells the browser to run the load function
+            as soon as the user reaches the end of the page. By 
+            default, the next 20 posts will be loaded
+            */
+            window.onscroll = () => {
+                if (window.innerHeight + window.scrollY >= document.body.offsetHeight) {
+                    load();
+                }
+            };
+
+            /* 
+            This function gets post from the server by calling fetch. 
+            It reaches out to the posts route that is defined in views 
+            and passes a START and END parameter as part of the 
+            GET request. 
+
+            When the data is recieved, it is read as a json 
+            document, then we loop over each posts in the array that is in
+            the "posts" key and run the function "add_posts"
+            */
+            function load() {
+
+                // Set start and end post numbers, and update counter
+                const start = counter;
+                const end = start + quantity - 1;
+                counter = end + 1;
+
+                // Get new posts and add posts
+                fetch(`/posts?start=${start}&end=${end}`)
+                .then(response => response.json())
+                .then(data => {
+                    data.posts.forEach(add_post);
+                })
+            };
+
+            /* 
+            Add posts creates the new posts on the page. It first
+            creates a new div element to contain the post. Next 
+            it assigns the div a class name, used for syling, and 
+            then it loads the inner html with contents that are passed into 
+            the funtion as a parameter. Finally, we query the div containing 
+            all the post, and append this div to the end of the child nodes.
+            */
+            function add_post(contents) {
+
+                // Create new post
+                const post = document.createElement('div');
+                post.className = 'post';
+                post.innerHTML = contents;
+
+                // Add post to DOM
+                document.querySelector('#posts').append(post);
+            };
+        </script>
+    </head>
+    <body>
+        <div id="posts">
+        </div>
+    </body>
+</html>

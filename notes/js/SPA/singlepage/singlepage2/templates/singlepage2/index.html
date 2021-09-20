@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Single Page</title>
+        <style></style>
+        <script>
+            // Controls what happens to the text when the user goes back in thier history
+            window.onpopstate = function(event) {
+                console.log(event.state.section);
+                // Shows the correct section information for the current state
+                showSection(event.state.section);
+            }
+            // Function for showing a particular block of text that is stored on the server
+            function showSection(section) {
+                // fetching this url from our server
+                fetch(`/sections/${section}`)
+                // Converting the response to text
+                .then(response => response.text())
+                // Passing that text into an anoynomous function 
+                .then(text => {
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                })
+            }
+            // Appllying this function fo the onclick event handler for the different buttons
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() {
+                        // Storing the section in a variable
+                        const section = this.dataset.section;
+                        // Pushing the current section info to the history state, the 3rd arg is what we want to go into the url, the first arg is a js object
+                        history.pushState({section: section}, "", `section${section}`);
+                        // Displaying the current state
+                        showSection(section);
+                    };
+                });
+            });
+        </script>
+    </head>
+    <main>
+        <body>
+            <h1>Hello!</h1>
+            <button data-section="1">Section 1</button>
+            <button data-section="2">Section 2</button>
+            <button data-section="3">Section 3</button>
+            <div id="content"></div>
+        </body>
+    </main>
+</html>

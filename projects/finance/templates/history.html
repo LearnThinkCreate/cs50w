@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote
+{% endblock %}
+
+{% block main %}
+    <div class="section">
+        {% block table %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Ticker</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Transaction Type</th>
+                    <th>Transacted</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- TODO: Loop through the database entries to display them in this table -->
+                    {% for trans in history %}
+                        <tr>
+                            <td>{{ trans.ticker | upper }}</td>
+                            <td>{{ trans.num_shares}}</td>
+                            <td>{{ trans.stock_price | usd }}</td>
+                            <td>{{ trans.transaction_type | upper }}</td>
+                            <td>{{ trans.transaction_date }}</td>
+                        </tr>
+                    {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
+
+{% endblock %}
+
+

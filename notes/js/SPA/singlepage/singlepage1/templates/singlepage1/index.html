@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Hello!</title>
+        <style></style>
+        <script>
+            // Function for showing a particular block of text that is stored on the server
+            function showSection(section) {
+                // fetching this url from our server
+                fetch(`/sections/${section}`)
+                // Converting the response to text
+                .then(response => response.text())
+                // Passing that text into an anoynomous function
+                .then(text => {
+                    console.log(text);
+                    document.querySelector('#content').innerHTML = text;
+                })
+            }
+            // Appllying this function fo the onclick event handler for the different buttons
+            document.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('button').forEach(button => {
+                    button.onclick = function() {
+                        showSection(this.dataset.section);
+                    }
+                });
+            });
+        </script>
+    </head>
+    <main>
+        <body>
+            <h1>Hello!</h1>
+            <button data-section="1">Section 1</button>
+            <button data-section="2">Section 2</button>
+            <button data-section="3">Section 3</button>
+            <div id="content"></div>
+        </body>
+    </main>
+</html>
