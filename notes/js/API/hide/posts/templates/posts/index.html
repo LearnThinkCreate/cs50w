@@ -65,7 +65,13 @@
                 }
             };
 
-            // If hide button is clicked, delete the post
+            /* 
+            This function listens for anytime the user clicks on the page.
+            If the element that the user clicked has a class of "hide" (which
+            is assigned to certain buttons) then the parent element (in which
+            the pressed button is contained) is then hidden by playing the 
+            animation then removing the element all together
+            */
             document.addEventListener('click', event => {
                 const element = event.target;
                 if (element.className === 'hide') {
