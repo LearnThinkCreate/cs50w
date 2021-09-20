@@ -7,26 +7,27 @@
         <title>Hello</title>
     </head>
     <body>
+        <!-- The div that will contain the React App -->
         <div id="app"></div>
 
         <script type="text/babel">
-
             function Hello(props) {
                 return (
                     <h1>Hello, {props.name}!</h1>
                 );
+                
             }
+            // React App is just a function that returns html to put in container div
             function App() {
-                return (
+                return (    
                     <div>
-                        <Hello name="Harry" />
-                        <Hello name="Ron" />
-                        <Hello name="Hermione" />
+                    <Hello name="Warren" />
                     </div>
                 );
             }
-
-            ReactDOM.render(<App />, document.querySelector("#app"));
+            
+            // The first argument is the app to render, the second is where to render it
+            ReactDOM.render(<App />, document.querySelector('#app'))
         </script>
     </body>
 </html>
