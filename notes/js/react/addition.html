@@ -32,6 +32,11 @@
 
             function App() {
 
+                /* 
+                React allows multiple state values to be assigned at once by 
+                defining the initial value of the state in a js object, then passing 
+                it to the argument for useState
+                */
                 const [state, setState] = React.useState({
                     num1: 1,
                     num2: 1,
@@ -40,14 +45,18 @@
                     incorrect: false
                 });
 
+                // Page to render if the user won
                 function renderWinScreen() {
                     return (
                         <div id="winner">You won!</div>
                     );
                 }
 
+                // Handling the answer from the user
                 function inputKeyPress(event) {
+                    // Check to see if the enter key was pressed
                     if (event.key === "Enter") {
+                        // typecasting the response to int
                         const answer = parseInt(state.response);
                         if (answer === state.num1 + state.num2) {
                             // User got question right
@@ -71,15 +80,33 @@
                     }
                 }
 
+                /* 
+                Updates the state response value similtaneously as the user 
+                enters their answer in the response field
+                */
                 function updateResponse(event) {
                     setState({
+                        // All previous values of the state should stay the same
                         ...state,
+                        // Except for the value the user has in the input field
                         response: event.target.value
                     });
                 }
 
+                // Randomly generating a problem
                 function renderProblem() {
                     return (
+                        /* 
+                        The first div uses the turnary operator to see if the submited response 
+                        was incorrect. If it was, the class incorect is added to the div
+
+                        Next our functions are applied to the input field:
+                            inputKeyPress is waiting for the user to submit an asnwer. If 
+                        an answer has been submited, it checks if the answer is right 
+                        or not then updates the state
+                            updateResonse updates the value of the input field as 
+                        the user is typing thier answer 
+                        */ 
                         <div>
                             <div className={state.incorrect ? "incorrect" : ""} id="problem">
                                 {state.num1} + {state.num2}
@@ -90,6 +117,7 @@
                     )
                 }
 
+                // Logic for continuing the game
                 if (state.score === 10) {
                     return renderWinScreen();
                 } else {
@@ -97,6 +125,7 @@
                 }
             }
 
+            // Adding our app "App" to the app div
             ReactDOM.render(<App />, document.querySelector("#app"));
         </script>
     </body>

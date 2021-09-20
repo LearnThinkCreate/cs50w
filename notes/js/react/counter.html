@@ -11,23 +11,34 @@
 
         <script type="text/babel">
 
-            function App() {
+        function App() {
 
-                const [count, setCount] = React.useState(0);
+            /* 
+            useState is a React hook for adding functionality to 
+            React component. Use state can set an initial value which,
+            in this case, is 0
+            */
+            const [count, setCount] = React.useState(
+                0
+            );
 
-                function updateCount() {
-                    setCount(count + 1);
-                }
-
-                return (
-                    <div>
-                        <h1>{count}</h1>
-                        <button onClick={updateCount}>Count</button>
-                    </div>
-                );
+            /* 
+            Function that applies the setCount function every time the 
+            Count button is clicked
+            */
+            function updateCount() {
+                setCount(count + 1);
             }
 
-            ReactDOM.render(<App />, document.querySelector("#app"));
+            return (
+                <div>
+                    <div>{count}</div>
+                    <button onClick={updateCount}>Count</button>
+                </div>
+            )
+        }
+
+        ReactDOM.render(<App />, document.querySelector('#app'))
         </script>
     </body>
 </html>
