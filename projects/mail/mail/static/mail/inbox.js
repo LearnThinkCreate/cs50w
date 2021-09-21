@@ -38,15 +38,71 @@ function load_mailbox(mailbox) {
 fetch(`/emails/${mailbox}`)
 .then (response => response.json())
 .then (emails => {
-  console.log(emails);
-
-  const email = document.createElement('div')
-  // Create a class for email divs and assign
-  email.className = 'emailDiv';
-  
-  // 
+  // Loading all the emails
+  emails.forEach(add_email);
 })
-}
+};
+
+function add_email(contents) {
+  // Creating the bootstrap container
+  const container = document.createElement('div');
+  container.className = 'row';
+
+  // Seeting if the email has been read 
+  if (contents['read']) {
+    container.className += ' email-read';
+  }
+
+  let email_contents = {
+    "sender":{
+      "type":"sender"
+    },
+    "subject":{
+      "type":"subject"
+    },
+    "timestamp":{
+      "type":"subject"
+    }
+  };
+
+  // Creating the 
+  for (email in email_contents) {
+    console.log(typeof(document.createElement('div')));
+    email['div'] = document.createElement('div');
+    console.log(typeof(email['div']))
+    if (email[0] === "subject") {
+      email['div'].className = 'col-6 email-inbox'; 
+    } else {
+      email['div'].className = 'col-3 email-inbox';
+    }
+
+    email['div'].innerHTML = contents[email['type']];
+
+    container.appendChild(email['div'])
+  }
+  // Creating the email contents 
+  // const sender = document.createElement('div');
+  // const subject = document.createElement('div');
+  // const timestamp = document.createElement('div');
+
+  // // Styling the divs 
+  // sender.className = 'col-3 email-inbox';
+  // subject.className = 'col-6 email-inbox';
+  // timestamp.className = 'col-3 email-inbox'
+
+  // // Adding the email contents
+  // sender.innerHTML = contents["sender"];
+  // subject.innerHTML = contents['subject'];
+  // timestamp.innerHTML = contents['timestamp'];
+
+  // // Appending the contents to the row container 
+  // container.appendChild(sender);
+  // container.appendChild(subject);
+  // container.appendChild(timestamp);
+
+  // Appending to the emails view for now
+  document.querySelector('#emails-view').append(container);
+};
 
 function sendEmailHandling() {
   document.querySelector('#compose-form').addEventListener("submit", (event) => {

@@ -11,7 +11,7 @@
     <a class="btn btn-sm btn-outline-primary" href="{% url 'logout' %}">Log Out</a>
     <hr>
 
-    <div id="emails-view">
+    <div class="container" id="emails-view">
     </div>
 
     <div id="compose-view">
@@ -30,14 +30,7 @@
             <input type="submit" id="compose-submit" class="btn btn-primary"/>
         </form>
     </div>
-
-    <div class="container">
-        <div class="row">
-            <div class="col-3 email-inbox">Warren</div>
-            <div class="col-7 email-inbox">This is a test</div>
-            <div class="col-2 email-inbox">Monday</div>
-        </div>
-    </div>
+    
 {% endblock %}
 
 {% block script %}
