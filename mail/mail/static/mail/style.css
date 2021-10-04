@@ -12,7 +12,10 @@ textarea {
 }
 
 .email-inbox {
-    padding: 5px;
-    border: 1px solid black;
+    border: 1px white;
     text-align: left;
+}
+
+.email-read {
+    background-color: lightgray;
 }
